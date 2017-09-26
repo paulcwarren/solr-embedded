@@ -9,7 +9,7 @@ Usage
 public class SolrConfig {}	
 ```
 
-This will start a embedded Apacahe Solr instance inside your application available at `http://localhost:8080/solr/solr`.
+This will start an embedded Apache Solr instance available at `http://localhost:8080/solr/solr`.
 
 Published to maven central using:-
 ```
