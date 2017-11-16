@@ -12,19 +12,25 @@ import java.util.zip.ZipInputStream;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.request.CoreAdminRequest;
 import org.apache.solr.core.NodeConfig;
 import org.apache.solr.core.SolrResourceLoader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
 public class SolrEmbeddedConfiguration {
 
-    private static final String CONFIGSET_DIR = "src/main/resources/configsets";
+    private static Log logger = LogFactory.getLog(SolrEmbeddedConfiguration.class);
+
+    @Autowired private Environment env;
 
     public String coreName() {
     	return "exampleCollection";
@@ -32,9 +38,7 @@ public class SolrEmbeddedConfiguration {
     
 	@Bean
 	public SolrClient solrClient() throws IOException, SolrServerException {
-//        String targetLocation = SolrEmbeddedConfiguration.class
-//                .getProtectionDomain().getCodeSource().getLocation().getFile() + "/..";
-        String targetLocation = "/tmp";
+        String targetLocation = env.getProperty("SOLR_EMBEDDED_TARGET_LOCATION", "/tmp");
 
         String solrHome = targetLocation + "/solr";
 		
@@ -45,6 +49,7 @@ public class SolrEmbeddedConfiguration {
         } else {
             solrHomeDir.mkdirs();
         }
+        logger.info(String.format("Deploying SolrEmbedded to %s", solrHomeDir.getAbsolutePath()));
 
         deployConfigsets(solrHome);
 
@@ -91,7 +96,7 @@ public class SolrEmbeddedConfiguration {
 	           if (ze.isDirectory()) {
 	        	   newFile.mkdirs();
 	           } else {
-		           System.out.println("file unzip : "+ newFile.getAbsoluteFile());
+		           logger.info("file unzip : "+ newFile.getAbsoluteFile());
 		
 		            //create all non exists folders
 		            //else you will hit FileNotFoundException for compressed folder
@@ -111,10 +116,8 @@ public class SolrEmbeddedConfiguration {
 	
 	    	zis.closeEntry();
 	    	zis.close();
-	
-	    	System.out.println("Done");
 	     } catch (Exception e) {
-	    	 e.printStackTrace();
+	    	 logger.error("Error deploying configsets", e);
 	     }
 	}
 
