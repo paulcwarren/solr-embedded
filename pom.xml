@@ -6,8 +6,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-		<springboot-version>1.5.4.RELEASE</springboot-version>
-        <solr-version>6.2.1</solr-version>
+		<springboot-version>2.0.5.RELEASE</springboot-version>
+        <solr-version>7.2.1</solr-version>
 	</properties>
 
 	<name>Embedded Solr Server</name>
@@ -49,7 +49,6 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<!-- Import dependency management from Spring Boot -->
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${springboot-version}</version>
