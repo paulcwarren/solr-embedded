@@ -7,7 +7,7 @@
 
 	<properties>
 		<springboot-version>2.0.5.RELEASE</springboot-version>
-        <solr-version>7.2.1</solr-version>
+        <solr-version>8.2.0</solr-version>
 	</properties>
 
 	<name>Embedded Solr Server</name>
